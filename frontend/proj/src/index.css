@@ -1,0 +1,155 @@
+/* ================================
+   GLOBAL RESET & BASE STYLES
+================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  background-color: #000;
+  color: #fff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 🚫 BODY MUST NOT BE FLEX */
+body {
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+/* ================================
+   ROOT CONTAINER (VERY IMPORTANT)
+================================ */
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* ================================
+   APP WRAPPER (CENTER LAYOUT)
+================================ */
+
+.app-wrapper {
+  max-width: 420px;          /* Mobile-first */
+  width: 100%;
+  min-height: 100vh;
+  margin: 0 auto;            /* 🔥 CENTER ALL PAGES */
+  background: #000;
+  position: relative;
+}
+
+/* ================================
+   LINKS
+================================ */
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #535bf2;
+}
+
+/* ================================
+   BUTTONS
+================================ */
+
+button {
+  border-radius: 8px;
+  border: none;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.25s, transform 0.1s;
+}
+
+button:hover {
+  background-color: #2a2a2a;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+button:focus-visible {
+  outline: 2px solid #646cff;
+  outline-offset: 2px;
+}
+
+/* ================================
+   HEADINGS
+================================ */
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: 600;
+}
+
+/* ================================
+   IMAGES & VIDEO
+================================ */
+
+img,
+video {
+  max-width: 100%;
+  display: block;
+}
+
+/* ================================
+   SCROLLBAR (OPTIONAL NICE LOOK)
+================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ================================
+   LIGHT MODE SUPPORT (OPTIONAL)
+================================ */
+
+@media (prefers-color-scheme: light) {
+  html, body {
+    background-color: #fff;
+    color: #111;
+  }
+
+  .app-wrapper {
+    background: #fff;
+  }
+
+  button {
+    background-color: #f0f0f0;
+    color: #111;
+  }
+
+  a {
+    color: #646cff;
+  }
+}

@@ -1,0 +1,96 @@
+@import "./theme.css";
+
+/* ===============================
+   BOTTOM NAV CONTAINER
+================================ */
+.bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  height: 56px; /* 🔥 STANDARD HEIGHT */
+  background: color-mix(in srgb, #000 60%, transparent);
+  backdrop-filter: blur(6px);
+
+  border-top: 1px solid var(--color-border);
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.35);
+  z-index: 100;
+
+  /* iOS safe area */
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* ===============================
+   INNER WRAPPER (CENTERED)
+================================ */
+.bottom-nav__inner {
+  max-width: 420px;      /* 🔥 MATCH APP WIDTH */
+  margin: 0 auto;
+  height: 100%;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  align-items: center;
+}
+
+/* ===============================
+   NAV ITEMS
+================================ */
+.bottom-nav__item {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+
+  color: var(--color-text-secondary);
+  text-decoration: none;
+
+  transition: color 0.2s ease, transform 0.15s ease;
+}
+
+.bottom-nav__item:active {
+  transform: scale(0.96);
+}
+
+/* ===============================
+   ACTIVE STATE
+================================ */
+.bottom-nav__item.is-active {
+  color: var(--color-text);
+}
+
+/* ===============================
+   ICON & LABEL
+================================ */
+.bottom-nav__icon {
+  line-height: 0;
+  display: grid;
+  place-items: center;
+}
+
+.bottom-nav__icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.bottom-nav__label {
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.3px;
+}
+
+/* ===============================
+   DESKTOP TWEAKS
+================================ */
+@media (min-width: 768px) {
+  .bottom-nav {
+    height: 60px;
+  }
+
+  .bottom-nav__inner {
+    max-width: 480px;
+  }
+}
