@@ -105,7 +105,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-
+  align-items: center;
   color: #fff;
   font-size: 14px;
 }
@@ -117,3 +117,91 @@
   color: #fff;
   cursor: pointer;
 }
+/* ===============================
+   RIGHT → INSTAGRAM/TIKTOK STYLE
+================================ */
+.reel-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  margin-right: 16px;
+}
+
+.reel-actions button {
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Heart (Like) - Red when liked */
+.reel-actions button:nth-child(1) {
+  color: white;
+}
+.reel-actions button:nth-child(1).liked {
+  color: #ff375f;
+  animation: heartBeat 0.4s ease;
+}
+
+/* Bookmark (Save) - Yellow when saved */
+.reel-actions button:nth-child(3) {
+  color: white;
+}
+.reel-actions button:nth-child(3).saved {
+  color: #FFD700;
+  animation: bounce 0.4s ease;
+}
+
+.reel-actions button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Count numbers */
+.reel-actions span {
+  font-size: 13px;
+  font-weight: 700;
+  margin-top: 6px;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+  letter-spacing: 0.5px;
+}
+
+/* Like count */
+.reel-actions span:nth-child(2) {
+  color: #ff375f;
+  font-weight: 800;
+}
+
+/* Save count */
+.reel-actions span:nth-child(4) {
+  color: #FFD700;
+  font-weight: 800;
+}
+
+/* Animations */
+@keyframes heartBeat {
+  0% { transform: scale(1); }
+  25% { transform: scale(1.3); }
+  50% { transform: scale(0.9); }
+  75% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+

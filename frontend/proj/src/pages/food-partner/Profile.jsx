@@ -1,19 +1,24 @@
-// Profile.jsx - Add these changes
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom"; // Add useNavigate
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../../styles/profile.css";
 
 const Profile = () => {
   const { id } = useParams();
-  const navigate = useNavigate(); // Add this
+  const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [videos, setVideos] = useState([]);
 
-  // Add click handler
+  // Click handler for videos
   const handleVideoClick = (index) => {
-    // Navigate to main reels page with URL parameters
-    navigate(`/reels?source=profile&profileId=${id}&start=${index}`);
+    navigate('/home', { 
+      state: { 
+        fromProfile: true,
+        profileId: id,
+        startIndex: index,
+        profileVideos: videos 
+      } 
+    });
   };
 
   useEffect(() => {
@@ -34,14 +39,44 @@ const Profile = () => {
 
   return (
     <main className="profile-page">
-      {/* HEADER - unchanged */}
+      {/* HEADER */}
       <section className="profile-header">
-        {/* ... your existing header code ... */}
+        <div className="profile-meta">
+          <img
+            className="profile-avatar"
+            src="https://images.unsplash.com/photo-1754653099086-3bddb9346d37?w=500&auto=format&fit=crop&q=60"
+            alt="Profile"
+          />
+
+          <div className="profile-info">
+            <h1 className="profile-pill profile-business">
+              {profile?.name}
+            </h1>
+            <p className="profile-pill profile-address">
+              {profile?.address}
+            </p>
+          </div>
+        </div>
+
+        <div className="profile-stats">
+          <div className="profile-stat">
+            <span className="profile-stat-label">total meals</span>
+            <span className="profile-stat-value">
+              {profile?.totalMeals ?? 0}
+            </span>
+          </div>
+          <div className="profile-stat">
+            <span className="profile-stat-label">customers served</span>
+            <span className="profile-stat-value">
+              {profile?.customersServed ?? 0}
+            </span>
+          </div>
+        </div>
       </section>
 
       <hr className="profile-sep" />
 
-      {/* VIDEOS GRID - Add onClick */}
+      {/* VIDEOS GRID */}
       <section className="profile-grid">
         {videos.map((v, index) => (
           <div 
