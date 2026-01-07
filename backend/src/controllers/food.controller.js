@@ -165,7 +165,7 @@
 // };
 const foodModel = require("../models/food");
 const likeModel = require("../models/likemodel");
-const saveModel = require("../models/savemodel");
+const saveModel = require("../models/saveModel");
 const storageService = require("../services/storage.service");
 
 async function createFood(req, res) {
