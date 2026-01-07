@@ -14,7 +14,7 @@ const Saved = () => {
     const fetchSavedVideos = async () => {
         try {
             setLoading(true)
-            const response = await axios.get("http://localhost:3000/api/food/save", { 
+            const response = await axios.get("http://reelbitess.onrender.com/api/food/save", { 
                 withCredentials: true 
             })
             
@@ -61,7 +61,7 @@ const Saved = () => {
     const removeSaved = async (item) => {
         try {
             await axios.post(
-                "http://localhost:3000/api/food/save", 
+                "http://reelbitess.onrender.com/api/food/save", 
                 { foodId: item._id }, 
                 { withCredentials: true }
             )
@@ -79,7 +79,7 @@ const Saved = () => {
     const handleLike = async (item) => {
         try {
             const res = await axios.post(
-                "http://localhost:3000/api/food/like",
+                "http://reelbitess.onrender.com/api/food/like",
                 { foodId: item._id },
                 { withCredentials: true }
             )

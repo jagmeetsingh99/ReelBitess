@@ -139,7 +139,7 @@ const Home = () => {
       setCurrentProfileId(null);
       
       axios
-        .get("http://localhost:3000/api/food", { withCredentials: true })
+        .get("http://reelbitess.onrender.com/api/food", { withCredentials: true })
         .then((res) => {
           // Filter only Cloudinary URLs
           const cleanVideos = res.data.foodItems.filter(
@@ -161,7 +161,7 @@ const Home = () => {
   const likeVideo = async (item) => {
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/food/like",
+        "http://reelbitess.onrender.com/api/food/like",
         { foodId: item._id },
         { withCredentials: true }
       );
@@ -187,7 +187,7 @@ const Home = () => {
   const saveVideo = async (item) => {
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/food/save",
+        "http://reelbitess.onrender.com/api/food/save",
         { foodId: item._id },
         { withCredentials: true }
       );
