@@ -1,29 +1,43 @@
+// frontend/proj/src/pages/auth/UserLogin.jsx
 import React from 'react';
 import '../../styles/auth-shared.css';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import api from '../../utils/api';
 
 const UserLogin = () => {
-
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
 
-    const email=e.target.email.value;
-    const password=e.target.password.value;
+    try {
+      console.log("📤 Attempting login...");
+      
+      const response = await api.post('/api/auth/user/login', {
+        email,
+        password
+      });
 
-    const response= await axios.post("http://reelbitess.onrender.com/api/auth/user/login",{
-   email,
-   password
-  },{withCredentials:true} // useful for cookie to store token
-   );
-
-    console.log(response);
-
-    navigate("/home");
-
+      console.log("✅ Login successful:", response.data);
+      
+      if (response.data.success) {
+        navigate("/");
+      } else {
+        alert("Login failed: " + response.data.message);
+      }
+    } catch (error) {
+      console.error("❌ Login error:", {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message
+      });
+      
+      alert(`Login failed: ${error.response?.data?.message || error.message}`);
+    }
   };
+
   return (
     <div className="auth-page-wrapper">
       <div className="auth-card" role="region" aria-labelledby="user-login-title">
@@ -34,11 +48,11 @@ const UserLogin = () => {
         <form className="auth-form" onSubmit={handleSubmit} noValidate>
           <div className="field-group">
             <label htmlFor="email">Email</label>
-            <input id="email" name="email" type="email" placeholder="you@example.com" autoComplete="email" />
+            <input id="email" name="email" type="email" placeholder="you@example.com" autoComplete="email" required />
           </div>
           <div className="field-group">
             <label htmlFor="password">Password</label>
-            <input id="password" name="password" type="password" placeholder="••••••••" autoComplete="current-password" />
+            <input id="password" name="password" type="password" placeholder="••••••••" autoComplete="current-password" required />
           </div>
           <button className="auth-submit" type="submit">Sign In</button>
         </form>

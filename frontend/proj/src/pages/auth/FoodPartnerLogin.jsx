@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../styles/auth-shared.css';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import api from '../../utils/api';
 
 const FoodPartnerLogin = () => {
 
@@ -15,8 +15,8 @@ const FoodPartnerLogin = () => {
       const password = e.target.password.value;
 
       // ─────── CHANGED HERE ───────
-      const response = await axios.post(
-        "https://reelbitess.onrender.com/api/auth/food-partner/login",
+      const response = await api.post(
+        "/api/auth/food-partner/login",
         { email, password },
         { withCredentials: true }
       );

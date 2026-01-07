@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import '../../styles/reels.css'
-import axios from 'axios'
 import ReelFeed from '../../components/ReelFeed'
+import api from '../../utils/api'
 
 const Saved = () => {
     const [videos, setVideos] = useState([])
@@ -14,7 +14,7 @@ const Saved = () => {
     const fetchSavedVideos = async () => {
         try {
             setLoading(true)
-            const response = await axios.get("http://reelbitess.onrender.com/api/food/save", { 
+            const response = await api.get("/api/food/save", { 
                 withCredentials: true 
             })
             
@@ -60,8 +60,8 @@ const Saved = () => {
 
     const removeSaved = async (item) => {
         try {
-            await axios.post(
-                "http://reelbitess.onrender.com/api/food/save", 
+            await api.post(
+                "/api/food/save", 
                 { foodId: item._id }, 
                 { withCredentials: true }
             )
@@ -78,8 +78,8 @@ const Saved = () => {
 
     const handleLike = async (item) => {
         try {
-            const res = await axios.post(
-                "http://reelbitess.onrender.com/api/food/like",
+            const res = await api.post(
+                "/api/food/like",
                 { foodId: item._id },
                 { withCredentials: true }
             )

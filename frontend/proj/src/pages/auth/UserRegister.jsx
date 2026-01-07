@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../../styles/auth-shared.css';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import api from '../../utils/api';
 
 const UserRegister = () => {
 
@@ -15,7 +15,7 @@ const UserRegister = () => {
         const email = e.target.email.value;
         const password = e.target.password.value;
 
-       const response= await axios.post("http://reelbitess.onrender.com/api/auth/user/register",{
+       const response= await api.post("/api/auth/user/register",{
             fullName: firstName+" "+lastName,
             email,
             password

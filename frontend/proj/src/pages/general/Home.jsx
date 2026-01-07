@@ -1,175 +1,69 @@
-// import React, { useEffect, useState } from "react";
-// import { useLocation } from "react-router-dom";
-// import axios from "axios";
-// import ReelFeed from "../../components/ReelFeed";
-
-// const Home = () => {
-//   const location = useLocation();
-//   const [videos, setVideos] = useState([]);
-//   const [startIndex, setStartIndex] = useState(0);
-
-//   // Check if coming from profile
-//   const { fromProfile, profileVideos, startIndex: profileStartIndex } = location.state || {};
-
-//   useEffect(() => {
-//     if (fromProfile && profileVideos && profileVideos.length > 0) {
-//       // Coming from Profile page
-//       let videosToShow = profileVideos;
-      
-//       // Reorder: clicked video first
-//       if (profileStartIndex > 0 && profileStartIndex < profileVideos.length) {
-//         videosToShow = [
-//           ...profileVideos.slice(profileStartIndex),
-//           ...profileVideos.slice(0, profileStartIndex)
-//         ];
-//         setStartIndex(0); // First video is now the clicked one
-//       } else {
-//         setStartIndex(profileStartIndex || 0);
-//       }
-      
-//       setVideos(videosToShow);
-//     } else {
-//       // Normal home page - fetch all videos
-//       axios
-//         .get("http://localhost:3000/api/food", { withCredentials: true })
-//         .then((res) => {
-//           res.data.foodItems.forEach((item, i) => {
-//             console.log(`VIDEO ${i}:`, item.video);
-//           });
-
-//           // Filter only Cloudinary URLs
-//           const cleanVideos = res.data.foodItems.filter(
-//             (item) =>
-//               item.video &&
-//               item.video.startsWith("https://res.cloudinary.com")
-//           );
-
-//           setVideos(cleanVideos);
-//           setStartIndex(0);
-//         })
-//         .catch((err) => {
-//           console.error("Fetch food error:", err);
-//         });
-//     }
-//   }, [fromProfile, profileVideos, profileStartIndex]);
-
-//   const likeVideo = async (item) => {
-//     const res = await axios.post(
-//       "http://localhost:3000/api/food/like",
-//       { foodId: item._id },
-//       { withCredentials: true }
-//     );
-
-//     setVideos((prev) =>
-//       prev.map((v) =>
-//         v._id === item._id
-//           ? { ...v, likeCount: v.likeCount + (res.data.like ? 1 : -1) }
-//           : v
-//       )
-//     );
-//   };
-
-//   const saveVideo = async (item) => {
-//     const res = await axios.post(
-//       "http://localhost:3000/api/food/save",
-//       { foodId: item._id },
-//       { withCredentials: true }
-//     );
-
-//     setVideos((prev) =>
-//       prev.map((v) =>
-//         v._id === item._id
-//           ? { ...v, savesCount: v.savesCount + (res.data.save ? 1 : -1) }
-//           : v
-//       )
-//     );
-//   };
-
-//   // Reorder videos if startIndex > 0
-//   const reorderedVideos = startIndex > 0 && videos.length > 0
-//     ? [...videos.slice(startIndex), ...videos.slice(0, startIndex)]
-//     : videos;
-
-//   return (
-//     <ReelFeed
-//       items={reorderedVideos}
-//       onLike={likeVideo}
-//       onSave={saveVideo}
-//       emptyMessage="No videos available"
-//     />
-//   );
-// };
-
-// export default Home;
+// frontend/proj/src/pages/general/Home.jsx
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
 import ReelFeed from "../../components/ReelFeed";
+import api from "../../utils/api";
 
 const Home = () => {
   const location = useLocation();
   const [videos, setVideos] = useState([]);
   const [startIndex, setStartIndex] = useState(0);
   const [currentProfileId, setCurrentProfileId] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Check if coming from profile
   const { fromProfile, profileId, profileVideos, startIndex: profileStartIndex } = location.state || {};
 
   useEffect(() => {
-    if (fromProfile && profileVideos && profileVideos.length > 0) {
-      // Coming from Profile page
-      setCurrentProfileId(profileId);
-      
-      let videosToShow = profileVideos;
-      
-      // Reorder: clicked video first
-      if (profileStartIndex > 0 && profileStartIndex < profileVideos.length) {
-        videosToShow = [
-          ...profileVideos.slice(profileStartIndex),
-          ...profileVideos.slice(0, profileStartIndex)
-        ];
-        setStartIndex(0);
-      } else {
-        setStartIndex(profileStartIndex || 0);
-      }
-      
-      setVideos(videosToShow);
-    } else {
-      // Normal home page - fetch all videos
-      setCurrentProfileId(null);
-      
-      axios
-        .get("http://reelbitess.onrender.com/api/food", { withCredentials: true })
-        .then((res) => {
-          // Filter only Cloudinary URLs
-          const cleanVideos = res.data.foodItems.filter(
-            (item) =>
-              item.video &&
-              item.video.startsWith("https://res.cloudinary.com")
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        
+        if (fromProfile && profileVideos && profileVideos.length > 0) {
+          // Coming from Profile page
+          setCurrentProfileId(profileId);
+          
+          let videosToShow = profileVideos;
+          
+          if (profileStartIndex > 0 && profileStartIndex < profileVideos.length) {
+            videosToShow = [
+              ...profileVideos.slice(profileStartIndex),
+              ...profileVideos.slice(0, profileStartIndex)
+            ];
+            setStartIndex(0);
+          } else {
+            setStartIndex(profileStartIndex || 0);
+          }
+          
+          setVideos(videosToShow);
+        } else {
+          // Normal home page - fetch all videos
+          setCurrentProfileId(null);
+          
+          const response = await api.get("/api/food");
+          const allVideos = response.data.foodItems || [];
+          
+          const cleanVideos = allVideos.filter(
+            (item) => item.video && item.video.startsWith("https://res.cloudinary.com")
           );
 
           setVideos(cleanVideos);
           setStartIndex(0);
-        })
-        .catch((err) => {
-          console.error("Fetch food error:", err);
-        });
-    }
+        }
+      } catch (err) {
+        console.error("❌ Fetch error:", err.response?.data || err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, [fromProfile, profileId, profileVideos, profileStartIndex]);
 
-  // ✅ FIXED: Like function - works with updated backend
   const likeVideo = async (item) => {
     try {
-      const res = await axios.post(
-        "http://reelbitess.onrender.com/api/food/like",
-        { foodId: item._id },
-        { withCredentials: true }
-      );
-
-      console.log("Like response:", res.data); // Debug log
-
-      setVideos((prev) =>
-        prev.map((v) =>
+      const res = await api.post("/api/food/like", { foodId: item._id });
+      setVideos(prev =>
+        prev.map(v =>
           v._id === item._id
             ? { 
                 ...v, 
@@ -183,19 +77,11 @@ const Home = () => {
     }
   };
 
-  // ✅ FIXED: Save function - works with updated backend
   const saveVideo = async (item) => {
     try {
-      const res = await axios.post(
-        "http://reelbitess.onrender.com/api/food/save",
-        { foodId: item._id },
-        { withCredentials: true }
-      );
-
-      console.log("Save response:", res.data); // Debug log
-
-      setVideos((prev) =>
-        prev.map((v) =>
+      const res = await api.post("/api/food/save", { foodId: item._id });
+      setVideos(prev =>
+        prev.map(v =>
           v._id === item._id
             ? { 
                 ...v, 
@@ -213,6 +99,21 @@ const Home = () => {
   const reorderedVideos = startIndex > 0 && videos.length > 0
     ? [...videos.slice(startIndex), ...videos.slice(0, startIndex)]
     : videos;
+
+  if (loading) {
+    return (
+      <div style={{
+        height: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'black',
+        color: 'white'
+      }}>
+        Loading videos...
+      </div>
+    );
+  }
 
   return (
     <ReelFeed

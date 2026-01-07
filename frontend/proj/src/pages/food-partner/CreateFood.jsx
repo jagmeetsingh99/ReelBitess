@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import axios from 'axios';
 import '../../styles/create-food.css';
 import { useNavigate } from 'react-router-dom';
+import api from '../../utils/api';
 
 const CreateFood = () => {
     const [ name, setName ] = useState('');
@@ -56,7 +56,7 @@ const CreateFood = () => {
         formData.append('description', description);
         formData.append("video", videoFile);
 
-        const response = await axios.post("http://reelbitess.onrender.com/api/food", formData, {
+        const response = await api.post("/api/food", formData, {
             withCredentials: true,
         })
 
