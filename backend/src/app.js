@@ -9,7 +9,7 @@ const foodPartnerRoutes = require("./routes/food-partner.route");
 const cors = require('cors');
 
 // Add this before your CORS middleware
-app.options('*', cors()); // Handle all OPTIONS requests
+
 
 app.use(cors({
   origin: ['http://localhost:5173', 'http://localhost:3000', 'https://reelbitess.vercel.app'],
