@@ -8,14 +8,15 @@ const foodRoutes = require("./routes/food.routes");
 const foodPartnerRoutes = require("./routes/food-partner.route");
 const cors = require('cors');
 
-// ✅ FIXED CORS - Allow multiple origins
+// Add this before your CORS middleware
+app.options('*', cors()); // Handle all OPTIONS requests
+
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000', 'https://reelbitess.vercel.app/'],
+  origin: ['http://localhost:5173', 'http://localhost:3000', 'https://reelbitess.vercel.app'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
-
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
