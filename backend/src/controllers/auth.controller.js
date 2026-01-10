@@ -31,10 +31,11 @@ async function registerUser(req, res) {
 
     const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '7d' });
 
+    // ✅ FIXED: Use sameSite: 'none' for cross-domain and secure: true
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: true, // Always true for cross-domain
+      sameSite: 'none', // This allows cross-domain cookies
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     });
 
@@ -95,11 +96,11 @@ async function loginUser(req, res) {
     // Create JWT token
     const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '7d' });
 
-    // Set cookie
+    // ✅ FIXED: Use sameSite: 'none' for cross-domain
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: true, // Must be true for sameSite: 'none'
+      sameSite: 'none', // Allows cross-domain
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
@@ -124,9 +125,13 @@ async function loginUser(req, res) {
   }
 }
 
-// Other functions remain the same with JWT_SECRET fallback...
+// Logout User
 function logoutUser(req, res) {
-  res.clearCookie("token");
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none'
+  });
   res.status(200).json({
     success: true,
     message: "Logged out successfully"
@@ -161,10 +166,11 @@ async function registerFoodPartner(req, res) {
 
     const token = jwt.sign({ id: foodPartner._id }, JWT_SECRET, { expiresIn: '7d' });
 
+    // ✅ FIXED: Use sameSite: 'none' for cross-domain
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: true,
+      sameSite: 'none',
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
@@ -216,10 +222,11 @@ async function loginFoodPartner(req, res) {
 
     const token = jwt.sign({ id: foodPartner._id }, JWT_SECRET, { expiresIn: '7d' });
 
+    // ✅ FIXED: Use sameSite: 'none' for cross-domain
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: true,
+      sameSite: 'none',
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
@@ -243,7 +250,11 @@ async function loginFoodPartner(req, res) {
 }
 
 function logoutfoodPartner(req, res) {
-  res.clearCookie("token");
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none'
+  });
   res.status(200).json({
     success: true,
     message: "Logged out successfully"

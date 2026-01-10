@@ -8,15 +8,36 @@ const foodRoutes = require("./routes/food.routes");
 const foodPartnerRoutes = require("./routes/food-partner.route");
 const cors = require('cors');
 
-// Add this before your CORS middleware
-
-
+// ✅ FIXED: Proper CORS configuration for cross-domain cookies
 app.use(cors({
   origin: ['http://localhost:5173', 'http://localhost:3000', 'https://reelbitess.vercel.app'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
+
+// ✅ Add explicit CORS headers middleware
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  
+  // Check if origin is allowed
+  const allowedOrigins = ['http://localhost:5173', 'http://localhost:3000', 'https://reelbitess.vercel.app'];
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  
+  // Handle preflight
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  
+  next();
+});
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -39,7 +60,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/food', foodRoutes);
 app.use('/api/food-partner', foodPartnerRoutes);
 
-// ✅ FIXED: 404 handler - removed the problematic '*'
+// 404 handler
 app.use((req, res) => {
   res.status(404).json({ 
     success: false,
@@ -47,7 +68,7 @@ app.use((req, res) => {
   });
 });
 
-// ✅ FIXED: Error handler
+// Error handler
 app.use((err, req, res, next) => {
   console.error("🔥 Server error:", err.stack);
   res.status(500).json({ 
